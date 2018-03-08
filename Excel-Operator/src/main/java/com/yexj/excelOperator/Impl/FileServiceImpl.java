@@ -1,9 +1,12 @@
 package com.yexj.excelOperator.Impl;
 
+import com.yexj.excelOperator.Column;
 import com.yexj.excelOperator.IFileService;
+import com.yexj.excelOperator.WorkbookUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -11,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,29 +34,32 @@ public class FileServiceImpl implements IFileService {
      */
     @Override
     public SXSSFWorkbook excelExport(List<?> dataInfoList) throws Exception {
-        long a = System.currentTimeMillis();
-        SXSSFWorkbook workbook = new SXSSFWorkbook(10000);
-        logger.info("\r<br> new SXSSFWorkbook执行耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
-        workbook.setCompressTempFiles(true);
-        Sheet first = workbook.createSheet("Sheet1");
-        Class classes = dataInfoList.get(0).getClass();
-        int resultSize = dataInfoList.size();
-        for (int i = -1; i < resultSize; i++) {
-            if(i == -1) {
-                // 首行
-                Row row = first.createRow(0);
-                CellStyle style = workbook.createCellStyle();
-                Method method = classes.getMethod("setExcelHead", CellStyle.class, Row.class);
-                method.invoke(dataInfoList.get(0), style, row);
-            } else {
-                // 数据
-                Row row = first.createRow(i+1);
-                Method method = classes.getMethod("setExcelData", Row.class);
-                method.invoke(dataInfoList.get(i), row);
-            }
-        }
-        logger.info("\r<br> generate workbook执行耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
+        Class clazz = dataInfoList.get(0).getClass();
+        SXSSFWorkbook workbook = WorkbookUtils.createWorkbook(clazz, dataInfoList);
         return workbook;
+//        long a = System.currentTimeMillis();
+//        SXSSFWorkbook workbook = new SXSSFWorkbook(10000);
+//        logger.info("\r<br> new SXSSFWorkbook执行耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
+//        workbook.setCompressTempFiles(true);
+//        Sheet first = workbook.createSheet("Sheet1");
+//        Class classes = dataInfoList.get(0).getClass();
+//        int resultSize = dataInfoList.size();
+//        for (int i = -1; i < resultSize; i++) {
+//            if(i == -1) {
+//                // 首行
+//                Row row = first.createRow(0);
+//                CellStyle style = workbook.createCellStyle();
+//                Method method = classes.getMethod("setExcelHead", CellStyle.class, Row.class);
+//                method.invoke(dataInfoList.get(0), style, row);
+//            } else {
+//                // 数据
+//                Row row = first.createRow(i+1);
+//                Method method = classes.getMethod("setExcelData", Row.class);
+//                method.invoke(dataInfoList.get(i), row);
+//            }
+//        }
+//        logger.info("\r<br> generate workbook执行耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
+//        return workbook;
     }
 
     /**
@@ -60,9 +68,9 @@ public class FileServiceImpl implements IFileService {
      */
     @Override
     public void excelRead() throws Exception {
-        SXSSFWorkbook workbook = new SXSSFWorkbook(new XSSFWorkbook(new FileInputStream(new File("E:/temp/t1.xlsx"))));
+        XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(new File("C:\\Users\\xinjian.ye\\Desktop\\personal\\ExcelOperator\\testExcelExport.xlsx")));
         Sheet sheet = null;
-//        int i = workbook.getSheetIndex("xt"); // sheet表名
+        int i = workbook.getSheetIndex("sheet"); // sheet表名
         sheet = workbook.getSheetAt(0);
         for (int j = 0; j < sheet.getLastRowNum() + 1; j++) {// getLastRowNum
             // 获取最后一行的行标

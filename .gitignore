@@ -50,3 +50,8 @@ disconf/download/reload.properties.lock
 disconf/compensation.properties
 disconf/compensation.properties.lock
 .DS_Store
+
+#excel
+*.xls
+
+*.xlsx

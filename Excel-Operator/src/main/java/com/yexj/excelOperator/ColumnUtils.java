@@ -25,7 +25,7 @@ public final class ColumnUtils {
      *
      */
     public static LinkedHashMap<Column, Field> findOrderedAnnotatedColumns(Class<?> clazz) {
-        Map<Integer, LinkedHashMap<Column, Field>> columnsByPriority = new TreeMap<>();
+        Map<Integer, LinkedHashMap<Column, Field>> columnsByPriority = new TreeMap<Integer, LinkedHashMap<Column, Field>>();
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
@@ -33,7 +33,7 @@ public final class ColumnUtils {
             if (column != null) {
                 LinkedHashMap<Column, Field> columns = columnsByPriority.get(column.priority());
                 if (columns == null) {
-                    columns = new LinkedHashMap<>();
+                    columns = new LinkedHashMap<Column, Field>();
                     columnsByPriority.put(column.priority(), columns);
                 }
 
@@ -41,7 +41,7 @@ public final class ColumnUtils {
             }
         }
 
-        LinkedHashMap<Column, Field> columns = new LinkedHashMap<>();
+        LinkedHashMap<Column, Field> columns = new LinkedHashMap<Column, Field>();
         for (LinkedHashMap<Column, Field> cs : columnsByPriority.values()) {
             columns.putAll(cs);
         }

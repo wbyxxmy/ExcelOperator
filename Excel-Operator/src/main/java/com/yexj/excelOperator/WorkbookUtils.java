@@ -1,10 +1,10 @@
 package com.yexj.excelOperator;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -19,24 +19,24 @@ public class WorkbookUtils {
 
     }
 
-    public static Workbook createWorkbook() {
-        return new HSSFWorkbook();
+    public static SXSSFWorkbook createWorkbook() {
+        return new SXSSFWorkbook();
     }
 
     public static <T>
-    Workbook createWorkbook(Class<T> clazz, T ... sources) throws IllegalAnnotationException {
+    SXSSFWorkbook createWorkbook(Class<T> clazz, T ... sources) throws IllegalAnnotationException {
         return createWorkbook(clazz, Arrays.asList(sources));
     }
 
     public static <T>
-    Workbook createWorkbook(Class<T> clazz, Collection<T> sources) throws IllegalAnnotationException {
-        Workbook workbook = createWorkbook();
+    SXSSFWorkbook createWorkbook(Class<T> clazz, Collection<T> sources) throws IllegalAnnotationException {
+        SXSSFWorkbook workbook = createWorkbook();
         addNewSheet(workbook, clazz, sources);
 
         return workbook;
     }
 
-    public static org.apache.poi.ss.usermodel.Sheet addNewSheet(Workbook workbook, String name) {
+    public static org.apache.poi.ss.usermodel.Sheet addNewSheet(SXSSFWorkbook workbook, String name) {
         Objects.requireNonNull(workbook);
         Objects.requireNonNull(name);
 
@@ -44,14 +44,14 @@ public class WorkbookUtils {
     }
 
     public static <T>
-    org.apache.poi.ss.usermodel.Sheet addNewSheet(Workbook workbook,
+    org.apache.poi.ss.usermodel.Sheet addNewSheet(SXSSFWorkbook workbook,
                                                   Class<T> clazz,
                                                   Collection<T> sources) throws IllegalAnnotationException {
         return addNewSheet(workbook, clazz, sources, true);
     }
 
     public static <T>
-    org.apache.poi.ss.usermodel.Sheet addNewSheet(Workbook workbook,
+    org.apache.poi.ss.usermodel.Sheet addNewSheet(SXSSFWorkbook workbook,
                                                   Class<T> clazz,
                                                   Collection<T> sources,
                                                   boolean activeNewSheet) throws IllegalAnnotationException {
@@ -69,7 +69,10 @@ public class WorkbookUtils {
         if (! annotatedColumns.isEmpty()) {
             int rowIndex = 0;
             if (sheetAnno.containsHeader()) {
-                createHeader(sheet, rowIndex++, annotatedColumns.keySet(), sheetAnno.containsSequence());
+                CellStyle style = workbook.createCellStyle();
+                style.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
+                style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+                createHeader(sheet, rowIndex++, annotatedColumns.keySet(), sheetAnno.containsSequence(),style);
             }
 
             if (sources != null && ! sources.isEmpty()) {
@@ -112,16 +115,16 @@ public class WorkbookUtils {
     private static void createHeader(org.apache.poi.ss.usermodel.Sheet sheet,
                                      int rowIndex,
                                      Collection<Column> columns,
-                                     boolean containsSequence) {
+                                     boolean containsSequence, CellStyle cellStyle) {
         Row row = sheet.createRow(rowIndex);
 
         int columnIndex = 0;
         if (containsSequence) {
-            row.createCell(columnIndex++).setCellValue("");
+            CellUtil.createCell(row, columnIndex++, "").setCellStyle(cellStyle);
         }
 
         for (Column column : columns) {
-            row.createCell(columnIndex++).setCellValue(column.name());
+            CellUtil.createCell(row, columnIndex++, column.name()).setCellStyle(cellStyle);
         }
     }
 
