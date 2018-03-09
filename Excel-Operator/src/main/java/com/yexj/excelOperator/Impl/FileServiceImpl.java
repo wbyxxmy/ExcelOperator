@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jws.WebService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
@@ -65,7 +66,7 @@ public class FileServiceImpl implements IFileService {
         XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(new File("C:\\Users\\xinjian.ye\\Desktop\\personal\\ExcelOperator\\testExcelExport.xlsx")));
         Sheet sheet = null;
         int i = workbook.getSheetIndex("sheet"); // sheet表名
-        sheet = workbook.getSheetAt(0);
+        sheet = workbook.getSheetAt(i);
         for (int j = 0; j < sheet.getLastRowNum() + 1; j++) {// getLastRowNum
             // 获取最后一行的行标
             Row row = sheet.getRow(j);
