@@ -14,6 +14,11 @@ public @interface Column {
     String name();
 
     /**
+     * 导出列1,导入列-1,既导入又导出0
+     */
+     int export() default 0;
+
+    /**
      * 排在前面的列具有低优先级，优先级相同时，按照出现的顺序排列
      */
     int priority() default 0;

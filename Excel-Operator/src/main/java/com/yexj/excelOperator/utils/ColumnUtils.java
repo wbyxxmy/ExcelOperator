@@ -26,13 +26,13 @@ public final class ColumnUtils {
      * 按照定义/priority顺序返回Column -> Field
      *
      */
-    public static LinkedHashMap<Column, Field> findOrderedAnnotatedColumns(Class<?> clazz) {
+    public static LinkedHashMap<Column, Field> findOrderedAnnotatedColumns(Class<?> clazz, int export) {
         Map<Integer, LinkedHashMap<Column, Field>> columnsByPriority = new TreeMap<Integer, LinkedHashMap<Column, Field>>();
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
-            if (column != null) {
+            if (column != null && (column.export() == export || column.export() == 0)) {
                 LinkedHashMap<Column, Field> columns = columnsByPriority.get(column.priority());
                 if (columns == null) {
                     columns = new LinkedHashMap<Column, Field>();

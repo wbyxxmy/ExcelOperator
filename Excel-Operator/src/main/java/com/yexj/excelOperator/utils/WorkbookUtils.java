@@ -66,7 +66,7 @@ public class WorkbookUtils {
             workbook.setActiveSheet(workbook.getSheetIndex(sheet));
         }
 
-        LinkedHashMap<Column, Field> annotatedColumns = ColumnUtils.findOrderedAnnotatedColumns(clazz);
+        LinkedHashMap<Column, Field> annotatedColumns = ColumnUtils.findOrderedAnnotatedColumns(clazz, 1);
         if (! annotatedColumns.isEmpty()) {
             int rowIndex = 0;
             if (sheetAnno.containsHeader()) {
@@ -105,7 +105,7 @@ public class WorkbookUtils {
         Objects.requireNonNull(source);
 
         Class<?> clazz = source.getClass();
-        LinkedHashMap<Column, Field> annotatedColumns = ColumnUtils.findOrderedAnnotatedColumns(clazz);
+        LinkedHashMap<Column, Field> annotatedColumns = ColumnUtils.findOrderedAnnotatedColumns(clazz, 1);
         if (! annotatedColumns.isEmpty()) {
             int rowIndex = sheet.getLastRowNum() + 1;
             boolean containsSequence = SheetUtils.annotationObject(clazz).containsSequence();

@@ -1,8 +1,10 @@
 package com.yexj.excepOperator;
 
 import com.yexj.excelOperator.Impl.FileServiceImpl;
+import com.yexj.excelOperator.annotation.Column;
 import com.yexj.excelOperator.api.IFileService;
 import com.yexj.excelOperator.dto.Employee;
+import com.yexj.excelOperator.utils.ColumnUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.junit.Test;
@@ -11,10 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Created by xinjian.ye on 2018/3/8.
@@ -81,9 +81,15 @@ public class FileServiceTest {
         Class<?> clazz = Employee.class;
         //定义对应的标题名与对应属性名
         titleAndAttribute=new HashMap<String, String>();
-        titleAndAttribute.put("姓名", "name");
-        titleAndAttribute.put("年龄", "age");
-        titleAndAttribute.put("电子邮箱", "email");
+
+        LinkedHashMap<Column, Field> linkedHashMap = ColumnUtils.findOrderedAnnotatedColumns(clazz, -1);
+
+        Iterator it = linkedHashMap.entrySet().iterator();
+
+        while(it.hasNext()) {
+            Map.Entry<Column, Field> entry = (Map.Entry) it.next();
+            titleAndAttribute.put(entry.getKey().name(), entry.getValue().getName());
+        }
 
         //调用解析工具包
 //        testExcel=new LeadingInExcel<Employee>(formart);
