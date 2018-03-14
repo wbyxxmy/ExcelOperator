@@ -1,8 +1,12 @@
 package com.yexj.excelOperator.api;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xinjian.ye on 2018/3/7.
@@ -16,6 +20,20 @@ public interface IFileService {
      */
     SXSSFWorkbook excelExport(List<?> dataInfoList) throws Exception;
 
+    /**
+     * 读取Excel
+     * @param multipart
+     * @param propertiesFileName
+     * @param kyeName
+     * @param sheetIndex
+     * @param titleAndAttribute
+     * @param clazz
+     * @return
+     * @throws Exception
+     */
+    List<?> uploadAndRead(MultipartFile multipart, String propertiesFileName, String kyeName, int sheetIndex,
+                          Map<String, String> titleAndAttribute, Class<?> clazz) throws Exception;
 
-    void excelRead() throws Exception;
+    @Deprecated
+    void excelRead(File file, Class<T> clazz) throws Exception;
 }

@@ -3,13 +3,16 @@ package com.yexj.excelOperator.dto;
 import com.yexj.excelOperator.annotation.Column;
 import com.yexj.excelOperator.annotation.Sheet;
 
+import java.io.Serializable;
+import java.util.Collection;
+
 /**
  * Created by xinjian.ye on 2018/3/8.
  */
 @Sheet
-public class Employee {
+public class Employee implements Serializable {
 
-    Employee() {}
+    public Employee() {}
 
     public Employee(String name, Integer age, String email) {
         this.email = email;
@@ -48,5 +51,14 @@ public class Employee {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

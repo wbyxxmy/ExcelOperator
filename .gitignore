@@ -55,3 +55,6 @@ disconf/compensation.properties.lock
 *.xls
 
 *.xlsx
+
+#
+temp/
