@@ -113,15 +113,6 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testExcelRead() {
-//        try {
-//            fileService.excelRead(new File("C:\\Users\\xinjian.ye\\Desktop\\personal\\ExcelOperator\\testExcelExport.xlsx"),Employee.class);
-//        } catch (Exception e) {
-//
-//        }
-    }
-
-    @Test
     public void testReflect() throws Exception {
         Class clazz = Employee.class;
         Object employ = clazz.newInstance();

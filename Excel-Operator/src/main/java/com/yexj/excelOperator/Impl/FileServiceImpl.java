@@ -52,7 +52,6 @@ public class FileServiceImpl implements IFileService {
      * @param propertiesFileName    properties文件名称
      * @param kyeName                properties文件中上传存储文件的路径
      * @param sheetIndex            读取Excle中的第几页中的数据
-     * @param titleAndAttribute        标题名与实体类属性名对应的Map集合
      * @param clazz                    实体类.class
      * @return                        返回读取出的List集合
      * @throws Exception
