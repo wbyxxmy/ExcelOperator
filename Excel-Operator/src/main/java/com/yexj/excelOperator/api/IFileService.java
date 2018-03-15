@@ -26,13 +26,12 @@ public interface IFileService {
      * @param propertiesFileName
      * @param kyeName
      * @param sheetIndex
-     * @param titleAndAttribute
      * @param clazz
      * @return
      * @throws Exception
      */
     List<?> uploadAndRead(MultipartFile multipart, String propertiesFileName, String kyeName, int sheetIndex,
-                          Map<String, String> titleAndAttribute, Class<?> clazz) throws Exception;
+                          Class<?> clazz) throws Exception;
 
     @Deprecated
     void excelRead(File file, Class<T> clazz) throws Exception;

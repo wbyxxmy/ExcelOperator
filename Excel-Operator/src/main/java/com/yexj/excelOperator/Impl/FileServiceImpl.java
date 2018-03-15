@@ -1,7 +1,9 @@
 package com.yexj.excelOperator.Impl;
 
+import com.yexj.excelOperator.annotation.Column;
 import com.yexj.excelOperator.api.IFileService;
 import com.yexj.excelOperator.dto.Employee;
+import com.yexj.excelOperator.utils.ColumnUtils;
 import com.yexj.excelOperator.utils.MyDateUtil;
 import com.yexj.excelOperator.utils.WorkbookUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -57,7 +59,7 @@ public class FileServiceImpl implements IFileService {
      */
     @Override
     public List<?> uploadAndRead(MultipartFile multipart, String propertiesFileName, String kyeName, int sheetIndex,
-                                 Map<String, String> titleAndAttribute, Class<?> clazz) throws Exception {
+                                 Class<?> clazz) throws Exception {
 
         String originalFilename=null;
         int i = 0;
@@ -72,7 +74,7 @@ public class FileServiceImpl implements IFileService {
 
         String filePath = readPropertiesFilePathMethod( propertiesFileName, kyeName);
         File filePathname = this.upload(multipart, filePath, isExcel2003);
-        List<?> judgementVersion = judgementVersion(filePathname, sheetIndex, titleAndAttribute, clazz, isExcel2003);
+        List<?> judgementVersion = judgementVersion(filePathname, sheetIndex, clazz, isExcel2003);
 
         return judgementVersion;
     }
@@ -172,13 +174,12 @@ public class FileServiceImpl implements IFileService {
      * 读取本地Excel文件返回List集合
      * @param filePathname
      * @param sheetIndex
-     * @param titleAndAttribute
      * @param clazz
      * @param isExcel2003
      * @return
      * @throws Exception
      */
-    public List<?> judgementVersion(File filePathname,int sheetIndex,Map<String, String> titleAndAttribute,Class<?> clazz,boolean isExcel2003) throws Exception{
+    public List<?> judgementVersion(File filePathname,int sheetIndex,Class<?> clazz,boolean isExcel2003) throws Exception{
 
         FileInputStream is=null;
         POIFSFileSystem fs=null;
@@ -208,20 +209,30 @@ public class FileServiceImpl implements IFileService {
             }
         }
 
-        return readExcelTitle(workbook,sheetIndex,titleAndAttribute,clazz);
+        return readExcelTitle(workbook,sheetIndex,clazz);
     }
 
     /**
      * 判断接收的Map集合中的标题是否于Excle中标题对应
      * @param workbook
      * @param sheetIndex
-     * @param titleAndAttribute
      * @param clazz
      * @return
      * @throws Exception
      */
-    private List<?> readExcelTitle(Workbook workbook,int sheetIndex,Map<String, String> titleAndAttribute,Class<?> clazz) throws Exception{
+    private List<?> readExcelTitle(Workbook workbook,int sheetIndex,Class<?> clazz) throws Exception{
+        Map<String, String> titleAndAttribute=null;
+        //定义对应的标题名与对应属性名
+        titleAndAttribute=new HashMap<String, String>();
 
+        LinkedHashMap<Column, Field> linkedHashMap = ColumnUtils.findOrderedAnnotatedColumns(clazz, -1);
+
+        Iterator it = linkedHashMap.entrySet().iterator();
+
+        while(it.hasNext()) {
+            Map.Entry<Column, Field> entry = (Map.Entry) it.next();
+            titleAndAttribute.put(entry.getKey().name(), entry.getValue().getName());
+        }
         //得到第一个shell
         Sheet sheet = workbook.getSheetAt(sheetIndex);
 

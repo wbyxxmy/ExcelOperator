@@ -77,24 +77,12 @@ public class FileServiceTest {
         String propertiesFileName = "config";
         String kyeName = "file_path";
         int sheetIndex = 0;
-        Map<String, String> titleAndAttribute=null;
-        Class<?> clazz = Employee.class;
-        //定义对应的标题名与对应属性名
-        titleAndAttribute=new HashMap<String, String>();
 
-        LinkedHashMap<Column, Field> linkedHashMap = ColumnUtils.findOrderedAnnotatedColumns(clazz, -1);
-
-        Iterator it = linkedHashMap.entrySet().iterator();
-
-        while(it.hasNext()) {
-            Map.Entry<Column, Field> entry = (Map.Entry) it.next();
-            titleAndAttribute.put(entry.getKey().name(), entry.getValue().getName());
-        }
 
         //调用解析工具包
 //        testExcel=new LeadingInExcel<Employee>(formart);
         //解析excel，获取客户信息集合
-        uploadAndRead = fileService.uploadAndRead(multipart, propertiesFileName, kyeName, sheetIndex, titleAndAttribute, clazz);
+        uploadAndRead = fileService.uploadAndRead(multipart, propertiesFileName, kyeName, sheetIndex, Employee.class);
         if(uploadAndRead != null && !"[]".equals(uploadAndRead.toString()) && uploadAndRead.size()>=1){
             judgement = true;
         }
