@@ -14,10 +14,11 @@ public class Employee implements Serializable {
 
     public Employee() {}
 
-    public Employee(String name, Integer age, String email) {
+    public Employee(String name, Integer age, String email, String department) {
         this.email = email;
         this.age = age;
         this.name = name;
+        this.department = department;
     }
 
     @Column(name = "姓名", priority = 0)
@@ -28,6 +29,9 @@ public class Employee implements Serializable {
 
     @Column(name = "年龄", priority = 1)
     private Integer age;
+
+    @Column(name = "部门", priority = 1)
+    private String department;
 
     public String getName() {
         return name;
@@ -53,11 +57,20 @@ public class Employee implements Serializable {
         this.age = age;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", department =" + department +
                 ", age=" + age +
                 '}';
     }
